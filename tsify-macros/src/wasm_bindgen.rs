@@ -51,7 +51,7 @@ pub fn expand(cont: &Container, decl: Decl) -> TokenStream {
             #use_serde
             use tsify::Tsify;
             use wasm_bindgen::{
-                convert::{FromWasmAbi, IntoWasmAbi, OptionFromWasmAbi, OptionIntoWasmAbi},
+                convert::{FromWasmAbi, IntoWasmAbi, OptionFromWasmAbi, OptionIntoWasmAbi, RefFromWasmAbi},
                 describe::WasmDescribe,
                 prelude::*,
             };
@@ -142,6 +142,26 @@ fn expand_from_wasm_abi(cont: &Container) -> TokenStream {
             #[inline]
             fn is_none(js: &Self::Abi) -> bool {
                 <JsType as OptionFromWasmAbi>::is_none(js)
+            }
+        }
+
+        struct SelfOwner<T>(T);
+
+        impl<T> ::core::ops::Deref for SelfOwner<T> {
+            type Target = T;
+
+            fn deref(&self) -> &Self::Target {
+                &self.0
+            }
+        }
+
+        impl #impl_generics RefFromWasmAbi for #ident #ty_generics #where_clause {
+            type Abi = <JsType as RefFromWasmAbi>::Abi;
+
+            type Anchor = SelfOwner<Self>;
+
+            unsafe fn ref_from_abi(js: Self::Abi) -> Self::Anchor {
+                SelfOwner(Self::from_abi(js))
             }
         }
     }
