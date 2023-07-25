@@ -77,7 +77,7 @@ const _: () = {
             <JsType as OptionFromWasmAbi>::is_none(js)
         }
     }
-    struct SelfOwner<T>(T);
+    pub struct SelfOwner<T>(T);
     impl<T> ::core::ops::Deref for SelfOwner<T> {
         type Target = T;
         fn deref(&self) -> &Self::Target {
@@ -171,7 +171,7 @@ const _: () = {
             <JsType as OptionFromWasmAbi>::is_none(js)
         }
     }
-    struct SelfOwner<T>(T);
+    pub struct SelfOwner<T>(T);
     impl<T> ::core::ops::Deref for SelfOwner<T> {
         type Target = T;
         fn deref(&self) -> &Self::Target {

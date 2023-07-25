@@ -145,7 +145,7 @@ fn expand_from_wasm_abi(cont: &Container) -> TokenStream {
             }
         }
 
-        struct SelfOwner<T>(T);
+        pub struct SelfOwner<T>(T);
 
         impl<T> ::core::ops::Deref for SelfOwner<T> {
             type Target = T;
