@@ -4,6 +4,7 @@ use std::collections::HashMap;
 
 use indoc::indoc;
 use pretty_assertions::assert_eq;
+use serde_bytes::ByteBuf;
 use tsify::Tsify;
 
 #[test]
@@ -122,6 +123,28 @@ fn test_tagged_struct() {
             export interface TaggedStruct {
                 type: "TaggedStruct";
                 x: number;
+                y: number;
+            }"#
+        }
+    );
+}
+
+#[cfg(feature = "js")]
+#[test]
+fn test_ByteBuf_struct() {
+    #[derive(Tsify)]
+    #[serde(tag = "type")]
+    struct TaggedStruct {
+        x: ByteBuf,
+        y: i32,
+    }
+
+    assert_eq!(
+        TaggedStruct::DECL,
+        indoc! {r#"
+            export interface TaggedStruct {
+                type: "TaggedStruct";
+                x: Uint8Array;
                 y: number;
             }"#
         }
